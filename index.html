@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asset Vault</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    
+    <!-- Loading overlay -->
+    <div id="loading-overlay">
+        <div class="loader"></div>
+        <div id="loading-text" style="font-weight:600; margin-top: 1rem;">Loading...</div>
+    </div>
+
+    <header>
+        <div class="logo">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--primary-color)"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+            Asset<span>Vault</span>
+        </div>
+        
+        <nav class="nav-filters" id="category-filters">
+            <button class="active" data-filter="all">All Assets</button>
+            <button data-filter="Free Source Code">Free Source Code</button>
+            <button data-filter="Paid Source Code">Paid Source Code</button>
+        </nav>
+
+        <div class="header-actions">
+            <button class="btn" onclick="openModal('upload')">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                Upload Asset
+            </button>
+            <button class="icon-btn" onclick="openModal('settings')" title="Settings">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+            </button>
+            <button class="icon-btn" onclick="toggleTheme()" title="Toggle Theme" id="theme-toggle">
+                <!-- Icon inserted by JS -->
+            </button>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="search-container">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            <input type="text" id="search-input" placeholder="Search free EAs / Source Codes...">
+        </div>
+        <div class="secondary-filters" id="platform-filters" style="margin-top: 1.5rem; display: flex; justify-content: center; gap: 1rem;">
+            <button class="btn btn-outline active" data-platform="all" style="border-radius: 20px;">ALL EAs</button>
+            <button class="btn btn-outline" data-platform="MT4" style="border-radius: 20px;">MT4</button>
+            <button class="btn btn-outline" data-platform="MT5" style="border-radius: 20px;">MT5</button>
+        </div>
+    </section>
+
+    <main>
+        <div class="grid" id="asset-grid">
+            <!-- Cards will be dynamically inserted here -->
+        </div>
+    </main>
+
+    <!-- Upload Modal -->
+    <div class="modal-overlay" id="upload-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Upload New Asset</h3>
+                <button class="modal-close" onclick="closeModal('upload')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="upload-form">
+                    <div class="form-group">
+                        <label>Target Platform/Tag</label>
+                        <select id="asset-platform" required>
+                            <option value="ALL">ALL</option>
+                            <option value="MT4">MT4</option>
+                            <option value="MT5">MT5</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Pricing Status</label>
+                        <select id="asset-category" required>
+                            <option value="Free Source Code">Free Source Code</option>
+                            <option value="Paid Source Code">Paid Source Code</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Item Title</label>
+                        <input type="text" id="asset-title" required placeholder="e.g. Premium E-commerce Theme">
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea id="asset-description" required placeholder="e.g. A fully responsive theme..." rows="3"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Version/Update Details</label>
+                        <input type="text" id="asset-version" placeholder="e.g. v1.0.0">
+                    </div>
+                    <div class="form-group">
+                        <label>Cover Image</label>
+                        <input type="file" id="asset-image" accept=".webp,.jpg,.jpeg,.png" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Asset File</label>
+                        <input type="file" id="asset-file" accept=".zip,.rar" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" type="button" onclick="closeModal('upload')">Cancel</button>
+                <button class="btn" type="button" onclick="handleUpload()">
+                    <div class="loader" id="upload-loader"></div>
+                    <span id="upload-btn-text">Upload to GitHub</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div class="modal-overlay" id="settings-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">GitHub API Settings</h3>
+                <button class="modal-close" onclick="closeModal('settings')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>GitHub Personal Access Token (PAT)</label>
+                    <input type="text" id="gh-token" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx">
+                </div>
+                <div class="form-group">
+                    <label>Repository (owner/repo)</label>
+                    <input type="text" id="gh-repo" placeholder="username/asset-vault">
+                </div>
+                <div class="form-group">
+                    <label>Branch</label>
+                    <input type="text" id="gh-branch" placeholder="main" value="main">
+                </div>
+                <p style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 1rem;">
+                    Your PAT needs `repo` scope to upload files and update database.json.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" type="button" onclick="closeModal('settings')">Cancel</button>
+                <button class="btn" type="button" onclick="saveSettings()">Save Settings</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
